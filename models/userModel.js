@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const db_link = require('../secrets');
+const { db_link } = require("../secrets");
 const validator = require("email-validator");
 
 mongoose
@@ -31,6 +31,9 @@ const userSchema = new mongoose.Schema({
       return validator.validate(this.email);
     },
   },
+  createdAt:{
+    type:String
+  },
   password: {
     type: String,
     required: true,
@@ -46,20 +49,25 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+userSchema.pre('save', function(){
+  this.confirmPassword=undefined;
+})
+
 const userModel = mongoose.model("userModel", userSchema);
 
-(async function createUser() {
-  try {
-    let user = {
-      name: "Annu",
-      age: 56,
-      email: "email@gmail.com",
-      password: "mypassword",
-      confirmPassword: "mqypassword",
-    };
-    let userObj = await userModel.create(user);
-    console.log(userObj);
-  } catch (err) {
-    console.log(err.message);
-  }
-})();
+// (async function createUser() {
+//   try {
+//     let user = {
+//       name: "Annu Kamat",
+//       age: 56,
+//       email: "emmail@gmail.com",
+//       password: "mypassword",
+//       confirmPassword: "mypassword",
+//     };
+//     let userObj = await userModel.create(user);
+//     console.log(userObj);
+//   } catch (err) {
+//     console.log(err.message);
+//   }
+// })();
+module.exports=userModel;
