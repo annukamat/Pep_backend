@@ -1,21 +1,38 @@
 const express = require("express");
 const userRouter = express.Router();
+const userModel = require("../models/userModel");
+const protectRoute=require("./authHelper");
 
 userRouter
   .route("/")
-  .get(getUser)
+  .get(protectRoute, getUsers)
   .post(createUser)
   .patch(updateUser)
   .delete(deleteUser);
+
 userRouter.route("/:id").get(getUserById);
 
-//GET
+// -------------------------FUNCTIONS----------------------------------
+
 // app.get('/user', getUser);
-async function getUser(req, res) {
-  res.json(user);
+async function getUsers(req, res) {
+  try {
+    console.log("getUser called");
+    let users = await userModel.find();
+    if (users) {
+      return res.json(users);
+    } else {
+      return res.json({
+        message: "users not found",
+      });
+    }
+  } catch (err) {
+    return res.json({
+      message: err.message,
+    });
+  }
 }
 
-// POST
 // app.post('/user', createUser)
 function createUser(req, res) {
   user = req.body;
@@ -23,7 +40,6 @@ function createUser(req, res) {
   res.send("data has been added successfully!!!");
 }
 
-// UPDATE
 // app.patch('/user', updateUser);
 function updateUser(req, res) {
   let obj = req.body;
@@ -33,14 +49,12 @@ function updateUser(req, res) {
   res.json(user);
 }
 
-// DELETE
 // app.delete('/user', deleteUser);
 function deleteUser(req, res) {
   user = {};
   res.json(user);
 }
 
-// PARAM ROUTE
 // app.get('/user/:id', getUserById);
 function getUserById(req, res) {
   console.log(req.params);

@@ -2,6 +2,8 @@ const express = require("express");
 // client jab server ko data bhejta hai - POST REQ
 // client jab data mngva rha server se to - GET REQ
 const app = express();
+const cookieParser=require('cookie-parser');
+app.use(cookieParser());
 app.use(express.json()); //middleware function
 app.use(express.static("public"));
 
@@ -9,8 +11,6 @@ const userRouter = require("./Routers/userRouter");
 const authRouter = require("./Routers/authRouter");
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
-
-
 
 app.listen("5000", function () {
   console.log("server listening on port 5000");
@@ -31,5 +31,3 @@ app.get("/user-all", (req, res) => {
 app.use((req, res) => {
   res.sendFile("public/404.html", { root: __dirname });
 }); //hamesha last me lagana chaye!
-
-//===================================FUNCTIONS==================================

@@ -49,6 +49,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+// confirm password save nhi krvana "pre" ki help se pehle hi check krke use empty kar denge
 userSchema.pre('save', function(){
   this.confirmPassword=undefined;
 })
